@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="cs">
 <head>
@@ -18,8 +19,6 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
         }
 
         .content {
@@ -30,7 +29,7 @@
             padding: 30px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 12px;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(4px);
             text-align: center;
         }
 
@@ -64,62 +63,68 @@
         const canvas = document.getElementById("gridCanvas");
         const ctx = canvas.getContext("2d");
 
-        const cols = 100;
-        const rows = 60;
-        let grid = createGrid(cols, rows);
-
+        // Nastavení velikosti canvasu před jakýmkoliv kreslením!
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        const cellSize = Math.min(canvas.width / cols, canvas.height / rows);
 
+        const cols = 150;
+        const rows = 100;
+        const cellSize = Math.min(canvas.width / cols, canvas.height / rows);
         const patterns = {
             glider: [
                 [1, 1, 1],
                 [1, 0, 0],
                 [0, 1, 0],
             ],
-            canoe: [
-                [0, 1, 0],
-                [1, 0, 1],
-                [0, 1, 0]
+            lwss: [
+                [0, 1, 1, 1, 1],
+                [1, 0, 0, 0, 1],
+                [0, 0, 0, 0, 1],
+                [1, 0, 0, 1, 0]
             ],
-            cloverleaf: [
-                [0, 1, 0, 1, 0],
-                [1, 0, 1, 0, 1],
-                [0, 1, 0, 1, 0]
+            gosperGun: [
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             ],
-            hammerhead: [
-                [1, 1, 0, 0, 0, 1, 1],
-                [1, 0, 0, 0, 0, 0, 1],
-                [0, 0, 0, 1, 0, 0, 0],
-                [1, 0, 0, 0, 0, 0, 1],
-                [1, 1, 0, 0, 0, 1, 1]
+            deathSpiral: [
+                [0, 0, 1, 1, 0, 0],
+                [0, 1, 0, 0, 1, 0],
+                [1, 0, 1, 1, 0, 1],
+                [1, 0, 1, 1, 0, 1],
+                [0, 1, 0, 0, 1, 0],
+                [0, 0, 1, 1, 0, 0]
             ],
-            toad: [
-            [0, 0, 1, 0],
-            [1, 0, 0, 1],
-            [1, 0, 0, 1],
-            [0, 1, 0, 0]
-          ]
+            twinRailgun: [
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+                [1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+            ]
         };
 
         function createGrid(cols, rows) {
             let newGrid = Array.from({ length: cols }, () => Array(rows).fill(0));
 
             let patternKeys = Object.keys(patterns);
-            for (let i = 0; i < 10; i++) { // Umístíme 10 náhodných patternů
+            for (let i = 0; i < 20; i++) { // Umístíme 10 náhodných patternů
                 let pattern = patterns[patternKeys[Math.floor(Math.random() * patternKeys.length)]];
                 let x = Math.floor(Math.random() * (cols - pattern.length));
                 let y = Math.floor(Math.random() * (rows - pattern[0].length));
 
                 for (let px = 0; px < pattern.length; px++) {
-                    for (let py = 0; py < pattern[0].length; py++) {
+                    for (let py = 0; py < pattern[px].length; py++) {
                         newGrid[x + px][y + py] = pattern[px][py];
                     }
                 }
             }
             return newGrid;
         }
+
+        let grid = createGrid(cols, rows);
+        console.log("Grid initialized:", grid);
 
         function drawGrid() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -167,9 +172,10 @@
         function gameLoop() {
             updateGrid();
             drawGrid();
-            setTimeout(() => requestAnimationFrame(gameLoop), 150);
+            setTimeout(() => requestAnimationFrame(gameLoop), 100);
         }
 
+        drawGrid(); // První vykreslení
         gameLoop();
     </script>
 
