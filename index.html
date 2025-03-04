@@ -66,34 +66,58 @@
 
         const cols = 100;
         const rows = 60;
-        let grid = createGrid(cols, rows, "pattern"); // Můžeš změnit na "random"
+        let grid = createGrid(cols, rows);
 
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         const cellSize = Math.min(canvas.width / cols, canvas.height / rows);
 
-        function createGrid(cols, rows, mode) {
+        const patterns = {
+            glider: [
+                [1, 1, 1],
+                [1, 0, 0],
+                [0, 1, 0],
+            ],
+            canoe: [
+                [0, 1, 0],
+                [1, 0, 1],
+                [0, 1, 0]
+            ],
+            cloverleaf: [
+                [0, 1, 0, 1, 0],
+                [1, 0, 1, 0, 1],
+                [0, 1, 0, 1, 0]
+            ],
+            hammerhead: [
+                [1, 1, 0, 0, 0, 1, 1],
+                [1, 0, 0, 0, 0, 0, 1],
+                [0, 0, 0, 1, 0, 0, 0],
+                [1, 0, 0, 0, 0, 0, 1],
+                [1, 1, 0, 0, 0, 1, 1]
+            ],
+            toad: [
+            [0, 0, 1, 0],
+            [1, 0, 0, 1],
+            [1, 0, 0, 1],
+            [0, 1, 0, 0]
+          ]
+        };
+
+        function createGrid(cols, rows) {
             let newGrid = Array.from({ length: cols }, () => Array(rows).fill(0));
 
-            if (mode === "random") {
-                return newGrid.map(row => row.map(() => Math.random() > 0.85 ? 1 : 0));
-            } else if (mode === "pattern") {
-                let centerX = Math.floor(cols / 2);
-                let centerY = Math.floor(rows / 2);
+            let patternKeys = Object.keys(patterns);
+            for (let i = 0; i < 10; i++) { // Umístíme 10 náhodných patternů
+                let pattern = patterns[patternKeys[Math.floor(Math.random() * patternKeys.length)]];
+                let x = Math.floor(Math.random() * (cols - pattern.length));
+                let y = Math.floor(Math.random() * (rows - pattern[0].length));
 
-                let glider = [
-                    [1, 1, 1],
-                    [1, 0, 0],
-                    [0, 1, 0],
-                ];
-
-                for (let i = 0; i < glider.length; i++) {
-                    for (let j = 0; j < glider[i].length; j++) {
-                        newGrid[centerX + i][centerY + j] = glider[i][j];
+                for (let px = 0; px < pattern.length; px++) {
+                    for (let py = 0; py < pattern[0].length; py++) {
+                        newGrid[x + px][y + py] = pattern[px][py];
                     }
                 }
             }
-
             return newGrid;
         }
 
@@ -143,7 +167,7 @@
         function gameLoop() {
             updateGrid();
             drawGrid();
-            setTimeout(() => requestAnimationFrame(gameLoop), 200); // zpomalení
+            setTimeout(() => requestAnimationFrame(gameLoop), 150);
         }
 
         gameLoop();
