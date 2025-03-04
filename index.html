@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio | Valdemar Pospíšil</title>
+    <title>Portfolio | Valdemar</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -32,70 +32,57 @@
             background: rgba(0, 0, 0, 0.7);
             border-radius: 10px;
         }
-        h1 {
-            color: #ff79c6;
-        }
-        .projects {
-            list-style: none;
-            padding: 0;
-        }
-        .projects li {
-            background-color: #6272a4;
-            margin: 10px 0;
-            padding: 15px;
-            border-radius: 10px;
-        }
-        a {
-            color: #50fa7b;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
+        h1 { color: #ff79c6; }
+        a { color: #50fa7b; text-decoration: none; }
+        a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
 
-<canvas id="gameOfLife"></canvas>
+<canvas id="automata"></canvas>
 
 <div class="content">
     <h1>Valdemar Pospíšil</h1>
     <p>Vývojář | Databázové systémy | Unity</p>
-    
     <h2>Moje projekty</h2>
-    <ul class="projects">
-        <li><strong>🦇 Upíří Rogue-like hra</strong> <br>
-            <a href="https://github.com/ValdemarPospisil/vampire-game" target="_blank">Repozitář na GitHubu</a>
-        </li>
-        <li><strong>📚 Sociální síť pro čtenáře</strong> <br>
-            <a href="https://github.com/ValdemarPospisil/book-network" target="_blank">Repozitář na GitHubu</a>
-        </li>
-        <li><strong>🌍 AI řízená simulace země</strong> <br>
-            <a href="https://github.com/ValdemarPospisil/ai-country-sim" target="_blank">Repozitář na GitHubu</a>
-        </li>
+    <ul>
+        <li><a href="https://github.com/ValdemarPospisil/vampire-game">🦇 Rogue-like hra</a></li>
+        <li><a href="https://github.com/ValdemarPospisil/book-network">📚 Sociální síť pro čtenáře</a></li>
+        <li><a href="https://github.com/ValdemarPospisil/ai-country-sim">🌍 AI simulace země</a></li>
     </ul>
 </div>
 
 <script>
-const canvas = document.getElementById("gameOfLife");
+const canvas = document.getElementById("automata");
 const ctx = canvas.getContext("2d");
 
-const CELL_SIZE = 8;  // Velikost buňky
+const CELL_SIZE = 8;
 const GRID_WIDTH = Math.floor(window.innerWidth / CELL_SIZE);
 const GRID_HEIGHT = Math.floor(window.innerHeight / CELL_SIZE);
-let grid = createGrid(GRID_WIDTH, GRID_HEIGHT);
+let grid = createGrid(GRID_WIDTH, GRID_HEIGHT, "random");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-// Inicializace náhodného stavu
-function createGrid(cols, rows) {
-    return new Array(cols).fill(null).map(() =>
-        new Array(rows).fill(null).map(() => Math.random() > 0.8 ? 1 : 0)
-    );
+function createGrid(cols, rows, mode) {
+    let newGrid = new Array(cols).fill(null).map(() => new Array(rows).fill(0));
+
+    if (mode === "random") {
+        return newGrid.map(row => row.map(() => Math.random() > 0.8 ? 1 : 0));
+    } else if (mode === "pattern") {
+        let centerX = Math.floor(cols / 2);
+        let centerY = Math.floor(rows / 2);
+        newGrid[centerX][centerY] = 1;
+        newGrid[centerX + 1][centerY] = 1;
+        newGrid[centerX - 1][centerY] = 1;
+        newGrid[centerX][centerY + 1] = 1;
+        newGrid[centerX][centerY - 1] = 1;
+        return newGrid;
+    }
+
+    return newGrid;
 }
 
-// Počítá živé sousedy buňky
 function countNeighbors(grid, x, y) {
     let sum = 0;
     for (let dx = -1; dx <= 1; dx++) {
@@ -109,36 +96,38 @@ function countNeighbors(grid, x, y) {
     return sum;
 }
 
-// Aktualizace Game of Life pravidel
 function updateGrid() {
-    let newGrid = createGrid(GRID_WIDTH, GRID_HEIGHT);
+    let newGrid = createGrid(GRID_WIDTH, GRID_HEIGHT, "empty");
+
     for (let x = 0; x < GRID_WIDTH; x++) {
         for (let y = 0; y < GRID_HEIGHT; y++) {
             let neighbors = countNeighbors(grid, x, y);
-            if (grid[x][y] === 1 && (neighbors === 2 || neighbors === 3)) {
-                newGrid[x][y] = 1;  // Buňka přežije
-            } else if (grid[x][y] === 0 && neighbors === 3) {
-                newGrid[x][y] = 1;  // Nová buňka se narodí
+            let alive = grid[x][y];
+
+            if (alive === 1) {
+                newGrid[x][y] = (neighbors === 3 || neighbors === 4 || neighbors === 6 || neighbors === 7 || neighbors === 8) ? 1 : 0;
+            } else {
+                newGrid[x][y] = (neighbors === 3 || neighbors === 6 || neighbors === 7 || neighbors === 8) ? 1 : 0;
             }
         }
     }
+
     grid = newGrid;
 }
 
-// Vykreslování na canvas
 function drawGrid() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#50fa7b";
+
     for (let x = 0; x < GRID_WIDTH; x++) {
         for (let y = 0; y < GRID_HEIGHT; y++) {
             if (grid[x][y] === 1) {
-                ctx.fillStyle = "#50fa7b";
                 ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
             }
         }
     }
 }
 
-// Hlavní smyčka
 function gameLoop() {
     updateGrid();
     drawGrid();
