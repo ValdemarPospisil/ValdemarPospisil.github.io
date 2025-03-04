@@ -67,8 +67,8 @@
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        const cols = 150;
-        const rows = 100;
+        const cols = 300;
+        const rows = 150;
         const cellSize = Math.min(canvas.width / cols, canvas.height / rows);
         const patterns = {
             glider: [
@@ -109,7 +109,7 @@
             let newGrid = Array.from({ length: cols }, () => Array(rows).fill(0));
 
             let patternKeys = Object.keys(patterns);
-            for (let i = 0; i < 20; i++) { // Umístíme 10 náhodných patternů
+            for (let i = 0; i < 35; i++) { // Umístíme 10 náhodných patternů
                 let pattern = patterns[patternKeys[Math.floor(Math.random() * patternKeys.length)]];
                 let x = Math.floor(Math.random() * (cols - pattern.length));
                 let y = Math.floor(Math.random() * (rows - pattern[0].length));
