@@ -47,6 +47,31 @@
         a:hover {
             text-decoration: underline;
         }
+
+        .github-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .github-links li {
+            display: inline-block;
+            margin: 5px;
+        }
+
+        .github-links a {
+            color: #00bcd4;
+            font-weight: bold;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .github-links a:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
     </style>
 </head>
 <body>
@@ -55,15 +80,21 @@
 
     <div class="content">
         <h1>Valdemar Pospíšil</h1>
-        <p>Programátor se zájmem o Unity, databáze a procedurální generování.</p>
-        <p><a href="https://github.com/ValdemarPospisil" target="_blank">GitHub</a> | <a href="#">LinkedIn</a></p>
+        <p>Moje projekty:</p>
+        <ul class="github-links">
+          <li><a href="#" target="_blank">Projekt 1</a></li>
+          <li><a href="#" target="_blank">Projekt 2</a></li>
+          <li><a href="#" target="_blank">Projekt 3</a></li>
+          <li><a href="#" target="_blank">Projekt 4</a></li>
+          <li><a href="#" target="_blank">Projekt 5</a></li>
+        </ul>
+        <p><a href="https://github.com/ValdemarPospisil" target="_blank">GitHub</a> </p>
     </div>
 
     <script>
         const canvas = document.getElementById("gridCanvas");
         const ctx = canvas.getContext("2d");
 
-        // Nastavení velikosti canvasu před jakýmkoliv kreslením!
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
@@ -175,7 +206,7 @@
             setTimeout(() => requestAnimationFrame(gameLoop), 100);
         }
 
-        drawGrid(); // První vykreslení
+        drawGrid(); 
         gameLoop();
     </script>
 
