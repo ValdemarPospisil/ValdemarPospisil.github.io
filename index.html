@@ -39,7 +39,7 @@
         }
 
         a {
-            color: #00bcd4;
+            color: #FFFFFF;
             text-decoration: none;
             font-weight: bold;
         }
@@ -59,7 +59,7 @@
         }
 
         .github-links a {
-            color: #00bcd4;
+            color: #FFFFFF;
             font-weight: bold;
             text-decoration: none;
             background: rgba(255, 255, 255, 0.1);
@@ -80,15 +80,14 @@
 
     <div class="content">
         <h1>Valdemar Pospíšil</h1>
-        <p>Moje projekty:</p>
+        <p>Projekty:</p>
         <ul class="github-links">
-          <li><a href="#" target="_blank">Projekt 1</a></li>
-          <li><a href="#" target="_blank">Projekt 2</a></li>
-          <li><a href="#" target="_blank">Projekt 3</a></li>
-          <li><a href="#" target="_blank">Projekt 4</a></li>
-          <li><a href="#" target="_blank">Projekt 5</a></li>
+          <li><a href="https://github.com/ValdemarPospisil/BetterReads" target="_blank">BetterReads</a></li>
+          <li><a href="https://github.com/ValdemarPospisil/DevilsProdigy" target="_blank">DevilsProdigy</a></li>
+          <li><a href="https://github.com/ValdemarPospisil/BugWeight" target="_blank">BugWeight</a></li>
+          <li><a href="https://github.com/ValdemarPospisil/SkyWitness" target="_blank">SkyWitness</a></li>
+          <li><a href="https://github.com/ValdemarPospisil/TermDungeon" target="_blank">TermDungeon</a></li>
         </ul>
-        <p><a href="https://github.com/ValdemarPospisil" target="_blank">GitHub</a> </p>
     </div>
 
     <script>
@@ -140,7 +139,7 @@
             let newGrid = Array.from({ length: cols }, () => Array(rows).fill(0));
 
             let patternKeys = Object.keys(patterns);
-            for (let i = 0; i < 35; i++) { // Umístíme 10 náhodných patternů
+            for (let i = 0; i < 40; i++) { 
                 let pattern = patterns[patternKeys[Math.floor(Math.random() * patternKeys.length)]];
                 let x = Math.floor(Math.random() * (cols - pattern.length));
                 let y = Math.floor(Math.random() * (rows - pattern[0].length));
