@@ -9,26 +9,30 @@
         body {
             background: black;
             margin: 0;
-            overflow: hidden;
             color: white;
             font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         canvas {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
+            z-index: 0;
         }
 
         .content {
             position: relative;
             z-index: 1;
-            max-width: 900px;
-            margin: 10vh auto;
+            width: 600px;
+            margin: 20px;
             padding: 30px;
             background: rgba(20, 20, 20, 0.8);
             border-radius: 12px;
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(1px);
             text-align: center;
         }
 
@@ -52,6 +56,7 @@
             list-style: none;
             padding: 0;
             text-align: left;
+            margin: 20px 0;
         }
 
         .project-list li {
@@ -217,17 +222,6 @@
                 [0, 1, 0, 0, 0, 0, 0],
                 [0, 0, 0, 1, 0, 0, 0],
                 [1, 1, 0, 0, 1, 1, 1]
-            ],
-            supernova: [
-                [0, 0, 0, 0, 1, 0, 0, 0, 0],
-                [0, 0, 0, 1, 1, 1, 0, 0, 0],
-                [0, 0, 1, 1, 1, 1, 1, 0, 0],
-                [0, 1, 1, 1, 1, 1, 1, 1, 0],
-                [1, 1, 1, 1, 0, 1, 1, 1, 1],
-                [0, 1, 1, 1, 1, 1, 1, 1, 0],
-                [0, 0, 1, 1, 1, 1, 1, 0, 0],
-                [0, 0, 0, 1, 1, 1, 0, 0, 0],
-                [0, 0, 0, 0, 1, 0, 0, 0, 0]
             ]
         };
 
@@ -242,7 +236,7 @@
 
             // Přidá náhodné vzory
             let patternKeys = Object.keys(patterns);
-            for (let i = 0; i < 40; i++) { 
+            for (let i = 0; i < 30; i++) { 
                 let pattern = patterns[patternKeys[Math.floor(Math.random() * patternKeys.length)]];
                 let x = Math.floor(Math.random() * (cols - pattern.length));
                 let y = Math.floor(Math.random() * (rows - pattern[0].length));
