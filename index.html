@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="cs">
 <head>
@@ -24,10 +23,10 @@
         .content {
             position: relative;
             z-index: 1;
-            max-width: 800px;
+            max-width: 900px;
             margin: 10vh auto;
             padding: 30px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(20, 20, 20, 0.8);
             border-radius: 12px;
             backdrop-filter: blur(4px);
             text-align: center;
@@ -36,6 +35,7 @@
         h1 {
             font-size: 2.5rem;
             font-weight: bold;
+            margin-bottom: 1.5rem;
         }
 
         a {
@@ -48,28 +48,40 @@
             text-decoration: underline;
         }
 
-        .github-links {
+        .project-list {
             list-style: none;
             padding: 0;
+            text-align: left;
         }
 
-        .github-links li {
-            display: inline-block;
-            margin: 5px;
-        }
-
-        .github-links a {
-            color: #FFFFFF;
-            font-weight: bold;
-            text-decoration: none;
+        .project-list li {
+            margin: 20px 0;
             background: rgba(255, 255, 255, 0.1);
-            padding: 5px 10px;
-            border-radius: 5px;
-            transition: background 0.3s ease;
+            border-radius: 8px;
+            padding: 15px;
+            transition: transform 0.2s, background 0.3s;
         }
 
-        .github-links a:hover {
-            background: rgba(255, 255, 255, 0.3);
+        .project-list li:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .project-title {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .project-description {
+            color: #cccccc;
+            margin-bottom: 5px;
+        }
+        
+        .project-tech {
+            font-size: 0.9rem;
+            color: #aaaaaa;
+            font-style: italic;
         }
 
     </style>
@@ -80,13 +92,33 @@
 
     <div class="content">
         <h1>Valdemar Pospíšil</h1>
-        <p>Projekty:</p>
-        <ul class="github-links">
-          <li><a href="https://github.com/ValdemarPospisil/BetterReads" target="_blank">BetterReads</a></li>
-          <li><a href="https://github.com/ValdemarPospisil/DevilsProdigy" target="_blank">DevilsProdigy</a></li>
-          <li><a href="https://github.com/ValdemarPospisil/BugWeight" target="_blank">BugWeight</a></li>
-          <li><a href="https://github.com/ValdemarPospisil/SkyWitness" target="_blank">SkyWitness</a></li>
-          <li><a href="https://github.com/ValdemarPospisil/TermDungeon" target="_blank">TermDungeon</a></li>
+        <p>Moje projekty:</p>
+        <ul class="project-list">
+            <li>
+                <div class="project-title"><a href="https://github.com/ValdemarPospisil/BetterReads" target="_blank">BetterReads</a></div>
+                <div class="project-description">Sociální síť pro milovníky knih</div>
+                <div class="project-tech">Flask, Python, Neo4j</div>
+            </li>
+            <li>
+                <div class="project-title"><a href="https://github.com/ValdemarPospisil/DevilsProdigy" target="_blank">DevilsProdigy</a></div>
+                <div class="project-description">2D platformer rogue-lite hra</div>
+                <div class="project-tech">Unity, C#</div>
+            </li>
+            <li>
+                <div class="project-title"><a href="https://github.com/ValdemarPospisil/BugWeight" target="_blank">BugWeight</a></div>
+                <div class="project-description">2D topdown rogue-lite hra</div>
+                <div class="project-tech">Unity, C#</div>
+            </li>
+            <li>
+                <div class="project-title"><a href="https://github.com/ValdemarPospisil/SkyWitness" target="_blank">SkyWitness</a></div>
+                <div class="project-description">Web pro hlášení UFO pozorování</div>
+                <div class="project-tech">PHP, JavaScript</div>
+            </li>
+            <li>
+                <div class="project-title"><a href="https://github.com/ValdemarPospisil/TermDungeon" target="_blank">TermDungeon</a></div>
+                <div class="project-description">Generátor dungeonů pro terminál</div>
+                <div class="project-tech">Python</div>
+            </li>
         </ul>
     </div>
 
@@ -100,6 +132,16 @@
         const cols = 300;
         const rows = 150;
         const cellSize = Math.min(canvas.width / cols, canvas.height / rows);
+        
+        // Barevné konstanty
+        const CELL_COLORS = {
+            NEW: "white",
+            STABLE: "yellow",
+            SUPER_STABLE: "orange",
+            ANCIENT: "red"
+        };
+        
+        // Patterns pro Game of Life
         const patterns = {
             glider: [
                 [1, 1, 1],
@@ -113,31 +155,92 @@
                 [1, 0, 0, 1, 0]
             ],
             gosperGun: [
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+                [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             ],
-            deathSpiral: [
-                [0, 0, 1, 1, 0, 0],
-                [0, 1, 0, 0, 1, 0],
-                [1, 0, 1, 1, 0, 1],
-                [1, 0, 1, 1, 0, 1],
-                [0, 1, 0, 0, 1, 0],
-                [0, 0, 1, 1, 0, 0]
+            bomb: [
+                [0, 0, 1, 1, 1, 0, 0],
+                [0, 1, 0, 0, 0, 1, 0],
+                [1, 0, 0, 1, 0, 0, 1],
+                [1, 0, 1, 0, 1, 0, 1],
+                [1, 0, 0, 1, 0, 0, 1],
+                [0, 1, 0, 0, 0, 1, 0],
+                [0, 0, 1, 1, 1, 0, 0]
             ],
-            twinRailgun: [
-                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-                [1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1],
-                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+            pulsar: [
+                [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+                [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0],
+                [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0]
+            ],
+            spaceship: [
+                [0, 1, 1, 1, 1, 1, 0],
+                [1, 0, 0, 0, 0, 0, 1],
+                [0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 1, 0],
+                [0, 0, 1, 1, 0, 0, 0]
+            ],
+            beacon: [
+                [1, 1, 0, 0],
+                [1, 1, 0, 0],
+                [0, 0, 1, 1],
+                [0, 0, 1, 1]
+            ],
+            pentadecathlon: [
+                [0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
+                [1, 1, 0, 1, 1, 1, 1, 0, 1, 1],
+                [0, 0, 1, 0, 0, 0, 0, 1, 0, 0]
+            ],
+            rpentomino: [
+                [0, 1, 1],
+                [1, 1, 0],
+                [0, 1, 0]
+            ],
+            diehard: [
+                [0, 0, 0, 0, 0, 0, 1, 0],
+                [1, 1, 0, 0, 0, 0, 0, 0],
+                [0, 1, 0, 0, 0, 1, 1, 1]
+            ],
+            acorn: [
+                [0, 1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 1, 0, 0, 0],
+                [1, 1, 0, 0, 1, 1, 1]
+            ],
+            supernova: [
+                [0, 0, 0, 0, 1, 0, 0, 0, 0],
+                [0, 0, 0, 1, 1, 1, 0, 0, 0],
+                [0, 0, 1, 1, 1, 1, 1, 0, 0],
+                [0, 1, 1, 1, 1, 1, 1, 1, 0],
+                [1, 1, 1, 1, 0, 1, 1, 1, 1],
+                [0, 1, 1, 1, 1, 1, 1, 1, 0],
+                [0, 0, 1, 1, 1, 1, 1, 0, 0],
+                [0, 0, 0, 1, 1, 1, 0, 0, 0],
+                [0, 0, 0, 0, 1, 0, 0, 0, 0]
             ]
         };
 
         function createGrid(cols, rows) {
-            let newGrid = Array.from({ length: cols }, () => Array(rows).fill(0));
+            // Vytvoří mřížku s objekty pro každou buňku
+            let newGrid = Array.from({ length: cols }, () => 
+                Array(rows).fill().map(() => ({
+                    state: 0,   // 0 = mrtvá, 1 = živá
+                    age: 0,     // kolik generací je buňka aktivní
+                }))
+            );
 
+            // Přidá náhodné vzory
             let patternKeys = Object.keys(patterns);
             for (let i = 0; i < 40; i++) { 
                 let pattern = patterns[patternKeys[Math.floor(Math.random() * patternKeys.length)]];
@@ -146,7 +249,9 @@
 
                 for (let px = 0; px < pattern.length; px++) {
                     for (let py = 0; py < pattern[px].length; py++) {
-                        newGrid[x + px][y + py] = pattern[px][py];
+                        if (pattern[px][py] === 1) {
+                            newGrid[x + px][y + py].state = 1;
+                        }
                     }
                 }
             }
@@ -154,15 +259,24 @@
         }
 
         let grid = createGrid(cols, rows);
-        console.log("Grid initialized:", grid);
 
         function drawGrid() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "white";
 
             for (let x = 0; x < cols; x++) {
                 for (let y = 0; y < rows; y++) {
-                    if (grid[x][y]) {
+                    if (grid[x][y].state) {
+                        // Zvolí barvu podle stáří buňky
+                        if (grid[x][y].age > 30) {
+                            ctx.fillStyle = CELL_COLORS.ANCIENT;
+                        } else if (grid[x][y].age > 20) {
+                            ctx.fillStyle = CELL_COLORS.SUPER_STABLE;
+                        } else if (grid[x][y].age > 10) {
+                            ctx.fillStyle = CELL_COLORS.STABLE;
+                        } else {
+                            ctx.fillStyle = CELL_COLORS.NEW;
+                        }
+                        
                         ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
                     }
                 }
@@ -170,15 +284,29 @@
         }
 
         function updateGrid() {
-            let newGrid = grid.map(arr => [...arr]);
+            let newGrid = grid.map(col => col.map(cell => ({
+                state: cell.state,
+                age: cell.age
+            })));
 
             for (let x = 0; x < cols; x++) {
                 for (let y = 0; y < rows; y++) {
                     let neighbors = countNeighbors(x, y);
-                    if (grid[x][y] === 1 && (neighbors < 2 || neighbors > 3)) {
-                        newGrid[x][y] = 0;
-                    } else if (grid[x][y] === 0 && neighbors === 3) {
-                        newGrid[x][y] = 1;
+                    
+                    // Pravidla Game of Life
+                    if (grid[x][y].state === 1) {
+                        if (neighbors < 2 || neighbors > 3) {
+                            // Buňka umírá
+                            newGrid[x][y].state = 0;
+                            newGrid[x][y].age = 0;
+                        } else {
+                            // Buňka přežívá, zvýšíme její věk
+                            newGrid[x][y].age++;
+                        }
+                    } else if (grid[x][y].state === 0 && neighbors === 3) {
+                        // Oživení buňky
+                        newGrid[x][y].state = 1;
+                        newGrid[x][y].age = 0;
                     }
                 }
             }
@@ -193,7 +321,7 @@
                     if (dx === 0 && dy === 0) continue;
                     let nx = (x + dx + cols) % cols;
                     let ny = (y + dy + rows) % rows;
-                    sum += grid[nx][ny];
+                    sum += grid[nx][ny].state;
                 }
             }
             return sum;
@@ -205,8 +333,16 @@
             setTimeout(() => requestAnimationFrame(gameLoop), 100);
         }
 
+        // Převeďte mřížku na požadovaný formát po prvním načtení
         drawGrid(); 
         gameLoop();
+        
+        // Responzivita při změně velikosti okna
+        window.addEventListener('resize', function() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            drawGrid();
+        });
     </script>
 
 </body>
